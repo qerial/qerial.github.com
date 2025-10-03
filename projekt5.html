@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Monster Energiajook</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Anton&family=Open+Sans&display=swap');
+
+  :root {
+    --bg: #121212;
+    --primary: #0fbd0f;
+    --accent: #78ff00;
+    --text-light: #e6e6e6;
+    --text-muted: #999999;
+    --shadow: 0 8px 30px rgba(0, 255, 0, 0.25);
+    --radius: 12px;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    font-family: 'Open Sans', sans-serif;
+    background-color: var(--bg);
+    color: var(--text-light);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+  }
+
+  main {
+    max-width: 900px;
+    width: 100%;
+    background: linear-gradient(135deg, #141414, #1e1e1e);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 30px 40px;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  header h1 {
+    font-family: 'Anton', sans-serif;
+    font-size: 3rem;
+    color: var(--primary);
+    margin: 0 0 8px;
+    letter-spacing: 4px;
+  }
+
+  header p {
+    font-size: 1.25rem;
+    color: var(--accent);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+
+  .hero {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    margin-bottom: 38px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .bottle {
+    position: relative;
+    width: 160px;
+    height: 400px;
+    background: linear-gradient(180deg, #121212 0%, #222 100%);
+    border-radius: 40px;
+    box-shadow:
+      inset 0 6px 12px rgba(0, 255, 0, 0.7),
+      0 16px 40px rgba(0, 255, 0, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .bottle::before {
+    content: 'M';
+    font-family: 'Anton', sans-serif;
+    font-size: 140px;
+    color: var(--primary);
+    text-shadow:
+      0 0 6px var(--primary),
+      0 0 12px var(--accent),
+      0 0 20px var(--accent),
+      0 0 30px var(--primary);
+    user-select: none;
+  }
+
+  .info {
+    max-width: 640px;
+  }
+
+  .info h2 {
+    font-family: 'Anton', sans-serif;
+    font-size: 2.2rem;
+    margin-bottom: 14px;
+    color: var(--primary);
+    letter-spacing: 1.5px;
+  }
+
+  .info p {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    margin-bottom: 24px;
+    line-height: 1.5;
+  }
+
+  .flavors {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 30px;
+  }
+
+  .flavor-card {
+    background: #222;
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    flex: 1 1 220px;
+    box-shadow: 0 4px 12px rgba(0, 255, 0, 0.15);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: default;
+  }
+
+  .flavor-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 32px rgba(0, 255, 0, 0.45);
+  }
+
+  .flavor-name {
+    font-family: 'Anton', sans-serif;
+    font-size: 1.3rem;
+    color: var(--primary);
+    margin: 0 0 6px 0;
+    letter-spacing: 1px;
+  }
+
+  .flavor-desc {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  .section-title {
+    font-family: 'Anton', sans-serif;
+    font-size: 1.6rem;
+    color: var(--primary);
+    border-bottom: 2px solid var(--primary);
+    padding-bottom: 6px;
+    margin-bottom: 20px;
+  }
+
+  footer {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-top: 50px;
+    user-select: none;
+  }
+
+  @media (max-width: 720px) {
+    .hero {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .bottle {
+      width: 140px;
+      height: 360px;
+    }
+
+    main {
+      padding: 30px 20px;
+    }
+  }
+</style>
+</head>
+<body>
+  <main role="main" aria-labelledby="page-title">
+    <header>
+      <h1 id="page-title">Monster Energy</h1>
+      <p>Unleash the Beast!</p>
+    </header>
+
+    <section class="hero" aria-label="Monster energy bottle and introduction">
+      <div class="bottle" aria-hidden="true"></div>
+      <div class="info">
+        <h2>What is Monster Energy?</h2>
+        <p>
+          Monster Energy is a bold and powerful energy drink designed to give you long-lasting energy and intense focus.
+          Known for its iconic green claw logo and aggressive flavors, Monster fuels athletes, gamers, and night owls alike.
+        </p>
+        <p>
+          With a blend of caffeine, taurine, B vitamins, and unique flavor combinations, Monster energizes your body and mind to tackle any challenge.
+        </p>
+      </div>
+    </section>
+
+    <section aria-labelledby="flavors-title">
+      <h2 id="flavors-title" class="section-title">Popular Flavors</h2>
+      <div class="flavors">
+        <article class="flavor-card" tabindex="0">
+          <h3 class="flavor-name">Original</h3>
+          <p class="flavor-desc">The classic Monster taste with a bold, sweet citrus flavor and the signature green claw logo.</p>
+        </article>
+        <article class="flavor-card" tabindex="0">
+          <h3 class="flavor-name">Pipeline Punch</h3>
+          <p class="flavor-desc">A tropical mix of passion fruit, orange, and guava, offering a refreshing and fruity energy boost.</p>
+        </article>
+        <article class="flavor-card" tabindex="0">
+          <h3 class="flavor-name">Ultra Sunrise</h3>
+          <p class="flavor-desc">Light and crisp with citrus and orange flavors, perfect for a refreshing energy lift without sugar crash.</p>
+        </article>
+        <article class="flavor-card" tabindex="0">
+          <h3 class="flavor-name">Mango Loco</h3>
+          <p class="flavor-desc">Sweet mango flavor combined with a hint of tart citrus for a uniquely tropical experience.</p>
+        </article>
+        <article class="flavor-card" tabindex="0">
+          <h3 class="flavor-name">Zero Sugar</h3>
+          <p class="flavor-desc">All the energy and taste with zero sugar — ideal for those watching their sugar intake.</p>
+        </article>
+      </div>
+    </section>
+
+    <section aria-labelledby="ingredients-title">
+      <h2 id="ingredients-title" class="section-title">Ingredients & Info</h2>
+      <p>
+        Monster Energy drinks typically include caffeine (about 160 mg per 16 oz can), taurine, B vitamins, ginseng extract, and carbonated water.
+        These ingredients work together to provide energy and mental alertness.
+      </p>
+      <p>
+        Consume responsibly. Not recommended for children, pregnant or breastfeeding women, or individuals sensitive to caffeine.
+      </p>
+    </section>
+
+    <footer>
+      &copy; 2025 — Monster Energy Fanpage Demo
+    </footer>
+  </main>
+</body>
+</html>
