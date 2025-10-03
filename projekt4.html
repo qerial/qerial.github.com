@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Being a Web Developer</title>
+  <style>
+    :root {
+      --bg: #f0f4f8;
+      --card-bg: #ffffff;
+      --primary: #3b82f6;
+      --accent: #2563eb;
+      --text: #111827;
+      --muted: #6b7280;
+      --radius: 12px;
+      --shadow: 0 8px 20px rgba(59, 130, 246, 0.15);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color-scheme: light;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      min-height: 100vh;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 0 20px 60px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    header h1 {
+      font-size: 2.6rem;
+      margin-bottom: 10px;
+      color: var(--primary);
+    }
+
+    header p {
+      font-size: 1.2rem;
+      color: var(--muted);
+    }
+
+    section {
+      background: var(--card-bg);
+      padding: 24px 28px;
+      margin-bottom: 30px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      transition: box-shadow 0.3s ease;
+    }
+
+    section:hover {
+      box-shadow: 0 12px 36px rgba(59, 130, 246, 0.25);
+    }
+
+    section h2 {
+      margin-top: 0;
+      color: var(--accent);
+      font-size: 1.8rem;
+      margin-bottom: 14px;
+      border-bottom: 2px solid var(--primary);
+      padding-bottom: 6px;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    ul li {
+      margin-bottom: 8px;
+      font-size: 1rem;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-top: 50px;
+      user-select: none;
+    }
+
+    @media (max-width: 600px) {
+      main {
+        padding: 0 14px 40px;
+      }
+
+      header h1 {
+        font-size: 2rem;
+      }
+
+      section {
+        padding: 18px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Being a Web Developer</h1>
+      <p>The art and science of creating websites and web applications</p>
+    </header>
+
+    <section aria-labelledby="what-is">
+      <h2 id="what-is">What is a Web Developer?</h2>
+      <p>
+        A web developer is a professional who builds and maintains websites or web applications. They work with code to create interactive, functional, and visually appealing experiences on the internet.
+        Web developers often specialize in front-end (user interface), back-end (server & database), or full-stack (both) development.
+      </p>
+    </section>
+
+    <section aria-labelledby="skills">
+      <h2 id="skills">Key Skills</h2>
+      <ul>
+        <li><strong>HTML & CSS:</strong> Structure and styling of web pages</li>
+        <li><strong>JavaScript:</strong> Adding interactivity and dynamic content</li>
+        <li><strong>Version Control:</strong> Using Git and platforms like GitHub</li>
+        <li><strong>Responsive Design:</strong> Making sites work well on all devices</li>
+        <li><strong>Problem Solving:</strong> Debugging and algorithmic thinking</li>
+        <li><strong>Communication:</strong> Collaborating with teams and clients</li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="tools">
+      <h2 id="tools">Popular Tools & Technologies</h2>
+      <ul>
+        <li><strong>Code Editors:</strong> VS Code, Sublime Text</li>
+        <li><strong>Frameworks/Libraries:</strong> React, Vue, Angular</li>
+        <li><strong>Backend:</strong> Node.js, Express, Django, Ruby on Rails</li>
+        <li><strong>Databases:</strong> MySQL, PostgreSQL, MongoDB</li>
+        <li><strong>Package Managers:</strong> npm, yarn</li>
+        <li><strong>Deployment:</strong> Netlify, Vercel, Heroku, AWS</li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="tips">
+      <h2 id="tips">Tips to Get Started</h2>
+      <ul>
+        <li>Start by learning HTML, CSS, and basic JavaScript.</li>
+        <li>Build small projects like personal websites or to-do apps.</li>
+        <li>Use online resources like MDN, freeCodeCamp, and tutorials.</li>
+        <li>Practice regularly and read others’ code on GitHub.</li>
+        <li>Join developer communities and forums for support.</li>
+        <li>Learn version control with Git early on.</li>
+        <li>Stay curious and keep experimenting with new technologies.</li>
+      </ul>
+    </section>
+
+    <footer>
+      &copy; 2025 — Simple Web Developer Guide
+    </footer>
+  </main>
+</body>
+</html>
