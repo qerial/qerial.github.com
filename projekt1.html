@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Crypto Price Tracker</title>
+  <style>
+    :root{
+      --bg:#0b1020;
+      --card:#0f1724;
+      --accent:#7cdbb6;
+      --muted:#9aa5b1;
+      --glass: rgba(255,255,255,0.03);
+      --danger:#ff6b6b;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
+      background:linear-gradient(180deg,#071021 0%, #031025 100%);
+      color:#e6eef3;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:28px;
+    }
+
+    .app {
+      width:100%;
+      max-width:980px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:12px;
+      box-shadow: 0 8px 30px rgba(3,6,12,0.6);
+      overflow:hidden;
+    }
+
+    header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:18px 20px;
+      border-bottom:1px solid rgba(255,255,255,0.03);
+      gap:12px;
+    }
+
+    .title {
+      display:flex;
+      gap:14px;
+      align-items:center;
+    }
+    .logo {
+      width:44px;
+      height:44px;
+      border-radius:10px;
+      background:linear-gradient(135deg,#20c997,#8be9c6);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:700;
+      color:#042022;
+      font-size:18px;
+      box-shadow: 0 4px 14px rgba(12,60,50,0.18);
+    }
+    h1{font-size:18px;margin:0}
+    p.lead{margin:0;color:var(--muted);font-size:13px}
+
+    .controls{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+
+    select, input[type="number"]{
+      background:var(--glass);
+      border:1px solid rgba(255,255,255,0.04);
+      color:var(--muted);
+      padding:8px 10px;
+      border-radius:8px;
+      outline:none;
+      font-size:14px;
+    }
+
+    button.btn {
+      background: linear-gradient(90deg,var(--accent), #4fd6a6);
+      color:#05221a;
+      border: none;
+      padding:9px 12px;
+      border-radius:9px;
+      font-weight:600;
+      cursor:pointer;
+      box-shadow: 0 6px 18px rgba(34,145,100,0.12);
+    }
+    button.ghost{
+      background:transparent;
+      color:var(--muted);
+      border:1px solid rgba(255,255,255,0.04);
+    }
+
+    main{
+      padding:18px;
+      display:grid;
+      grid-template-columns: 1fr 340px;
+      gap:16px;
+    }
+
+    .card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));
+      border-radius:10px;
+      padding:14px;
+      border:1px solid rgba(255,255,255,0.03);
+    }
+
+    .list {
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+
+    .coin {
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding:10px;
+      border-radius:8px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);
+      transition:transform .12s ease;
+    }
+    .coin:hover{ transform:translateY(-4px) }
+
+    .coin .meta{
+      flex:1;
+      min-width:0;
+    }
+    .coin h3{margin:0;font-size:15px}
+    .coin .sub{color:var(--muted);font-size:12px;margin-top:4px}
+
+    .price{
+      text-align:right;
+      min-width:160px;
+    }
+    .price .value{font-weight:700;font-size:16px}
+    .price .change{
+      font-size:13px;
+      margin-top:6px;
+      color:var(--muted);
+    }
+    .change.up{ color:#7be495 }
+    .change.down{ color:#ff9b9b }
+
+    .sidebar .row {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:8px;
+      padding:8px 0;
+      border-bottom:1px dashed rgba(255,255,255,0.02);
+    }
+
+    .footer {
+      padding:12px 18px;
+      border-top:1px solid rgba(255,255,255,0.03);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .status { font-weight:600; color:var(--muted) }
+    .error { color:var(--danger); font-weight:700; }
+
+    .small { font-size:12px; color:var(--muted) }
+
+    /* responsive */
+    @media (max-width:900px){
+      main{ grid-template-columns: 1fr; }
+      .price{ min-width:120px }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="title">
+        <div class="logo">CT</div>
+        <div>
+          <h1>Crypto Tracker</h1>
+          <p class="lead">Live prices from CoinGecko — Bitcoin, Ethereum, and more</p>
+        </div>
+      </div>
+
+      <div class="controls">
+        <label class="small" style="margin-right:6px;color:var(--muted)">Fiat</label>
+        <select id="vsCurrency" title="Select fiat currency">
+          <option value="usd">USD</option>
+          <option value="eur">EUR</option>
+          <option value="gbp">GBP</option>
+          <option value="try">TRY</option>
+          <option value="rub">RUB</option>
+        </select>
+
+        <label class="small" style="margin-left:6px;color:var(--muted)">Update (s)</label>
+        <input id="intervalInput" type="number" min="5" value="10" style="width:72px" />
+
+        <button id="refreshBtn" class="btn" title="Refresh now">Refresh</button>
+        <button id="toggleAuto" class="ghost" title="Toggle auto-updates">Auto: On</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+          <strong>Tracked currencies</strong>
+          <div class="small" style="color:var(--muted)">Pick from the list below</div>
+        </div>
+
+        <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+          <!-- quick add buttons -->
+          <button class="ghost quick" data-coin="bitcoin">BTC</button>
+          <button class="ghost quick" data-coin="ethereum">ETH</button>
+          <button class="ghost quick" data-coin="cardano">ADA</button>
+          <button class="ghost quick" data-coin="binancecoin">BNB</button>
+          <button class="ghost quick" data-coin="dogecoin">DOGE</button>
+          <button class="ghost quick" data-coin="litecoin">LTC</button>
+          <button class="ghost quick" data-coin="tether">USDT</button>
+          <button class="ghost quick" data-coin="solana">SOL</button>
+        </div>
+
+        <div style="display:flex;gap:8px;margin-bottom:10px">
+          <input id="addCoinInput" placeholder="Type coin id (e.g. bitcoin, polkadot)" style="flex:1" />
+          <button id="addCoinBtn" class="btn">Add</button>
+        </div>
+
+        <div id="list" class="list">
+          <!-- coin rows will be injected here -->
+        </div>
+      </section>
+
+      <aside class="card sidebar">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <strong>Settings & Info</strong>
+          <div class="small">Powered by CoinGecko</div>
+        </div>
+
+        <div class="row">
+          <div class="small">Auto refresh</div>
+          <div id="autoStatus" class="small">On</div>
+        </div>
+
+        <div class="row">
+          <div class="small">Tracked</div>
+          <div id="trackedCount" class="small">0</div>
+        </div>
+
+        <div class="row">
+          <div class="small">Last update</div>
+          <div id="lastUpdate" class="small">—</div>
+        </div>
+
+        <div style="margin-top:12px;font-size:13px;color:var(--muted)">
+          <p style="margin:0 0 6px 0">Notes:</p>
+          <ul style="margin:0 0 0 18px;padding:0;color:var(--muted)">
+            <li>Uses CoinGecko public API (no key).</li>
+            <li>Coin IDs are CoinGecko slugs (e.g. <code>bitcoin</code>, <code>ethereum</code>).</li>
+            <li>Change% is 24h change provided by API.</li>
+          </ul>
+        </div>
+
+        <div style="margin-top:auto"></div>
+      </aside>
+    </main>
+
+    <div class="footer">
+      <div class="status" id="fetchStatus">Ready</div>
+      <div class="small">Made with ♥ — open-source</div>
+    </div>
+  </div>
+
+  <script>
+    // ======== Config / State ========
+    const defaultCoins = ["bitcoin","ethereum","litecoin","dogecoin"];
+    const state = {
+      coins: new Set(defaultCoins),
+      vsCurrency: "usd",
+      intervalSec: 10,
+      auto: true,
+      timer: null
+    };
+
+    // ======== DOM ========
+    const listEl = document.getElementById("list");
+    const trackedCountEl = document.getElementById("trackedCount");
+    const lastUpdateEl = document.getElementById("lastUpdate");
+    const fetchStatusEl = document.getElementById("fetchStatus");
+    const vsCurrencyEl = document.getElementById("vsCurrency");
+    const intervalInputEl = document.getElementById("intervalInput");
+    const refreshBtn = document.getElementById("refreshBtn");
+    const toggleAutoBtn = document.getElementById("toggleAuto");
+    const autoStatusEl = document.getElementById("autoStatus");
+    const addCoinInput = document.getElementById("addCoinInput");
+    const addCoinBtn = document.getElementById("addCoinBtn");
+    const quickBtns = document.querySelectorAll(".quick");
+
+    // ======== Helpers ========
+    function coinIdSafe(id){
+      return id.trim().toLowerCase();
+    }
+
+    function renderListEmpty(){
+      listEl.innerHTML = '<div style="color:var(--muted);padding:8px">No coins tracked. Add a coin to get started.</div>';
+    }
+
+    function renderCoinsPlaceholders(){
+      listEl.innerHTML = '';
+      state.coins.forEach(id=>{
+        const el = document.createElement('div');
+        el.className = 'coin';
+        el.dataset.coin = id;
+        el.innerHTML = `
+          <div style="width:44px;height:44px;border-radius:8px;background:linear-gradient(135deg,#29323c,#1b2430);display:flex;align-items:center;justify-content:center;color:var(--muted);font-weight:700">${(id[0]||'').toUpperCase()}</div>
+          <div class="meta">
+            <h3>${id}</h3>
+            <div class="sub">loading…</div>
+          </div>
+          <div class="price">
+            <div class="value">—</div>
+            <div class="change small">—</div>
+            <div style="margin-top:6px"><button class="ghost" data-remove="${id}">Remove</button></div>
+          </div>
+        `;
+        listEl.appendChild(el);
+      });
+    }
+
+    function updateTrackedCount(){ trackedCountEl.textContent = state.coins.size }
+
+    function createCoinRow(id, data, vsCurrency){
+      // data has price and 24h change if requested
+      const price = data?.[vsCurrency];
+      const change = data?.[vsCurrency + "_24h_change"];
+      const changeClass = (change===undefined)?'':(change>=0 ? 'up' : 'down');
+      const formattedPrice = (price===undefined) ? '—' : Number(price).toLocaleString(undefined,{style:'currency',currency:vsCurrency.toUpperCase()});
+      const formattedChange = (change===undefined) ? '—' : (Number(change).toFixed(2) + '%');
+
+      const div = document.createElement('div');
+      div.className = 'coin';
+      div.dataset.coin = id;
+      div.innerHTML = `
+        <div style="width:44px;height:44px;border-radius:8px;background:linear-gradient(135deg,#10202a,#0d2434);display:flex;align-items:center;justify-content:center;color:var(--muted);font-weight:700">
+          <img alt="${id}" src="https://icons.coinmarketcap.com/static/img/coins/64x64/placeholder.png" style="width:28px;display:block;border-radius:6px;"/>
+        </div>
+        <div class="meta">
+          <h3>${id}</h3>
+          <div class="sub">id: <span style="color:var(--muted)">${id}</span></div>
+        </div>
+        <div class="price">
+          <div class="value">${formattedPrice}</div>
+          <div class="change ${changeClass}">${formattedChange}</div>
+          <div style="margin-top:6px"><button class="ghost" data-remove="${id}">Remove</button></div>
+        </div>
+      `;
+      return div;
+    }
+
+    // ======== Fetching ========
+    // Using CoinGecko simple/price endpoint
+    // Example: https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd&include_24hr_change=true
+    async function fetchPrices(){
+      if (state.coins.size === 0){
+        renderListEmpty();
+        updateTrackedCount();
+        return;
+      }
+
+      const ids = Array.from(state.coins).join(',');
+      const vs = state.vsCurrency;
+      const url = `https://api.coingecko.com/api/v3/simple/price?ids=${encodeURIComponent(ids)}&vs_currencies=${encodeURIComponent(vs)}&include_24hr_change=true`;
+
+      fetchStatusEl.textContent = 'Fetching…';
+      fetchStatusEl.classList.remove('error');
+      try{
+        const res = await fetch(url, {cache: "no-store"});
+        if (!res.ok) throw new Error(`API responded ${res.status}`);
+        const json = await res.json();
+
+        // Clear and render
+        listEl.innerHTML = '';
+        state.coins.forEach(id=>{
+          const row = createCoinRow(id, json[id] || {}, vs);
+          listEl.appendChild(row);
+        });
+
+        const now = new Date();
+        lastUpdateEl.textContent = now.toLocaleTimeString();
+        fetchStatusEl.textContent = `Last updated ${now.toLocaleTimeString()}`;
+      } catch(err){
+        fetchStatusEl.textContent = 'Error fetching data';
+        fetchStatusEl.classList.add('error');
+        const message = err?.message || String(err);
+        listEl.innerHTML = `<div style="color:var(--danger);padding:8px">Failed to fetch prices: ${message}</div>`;
+        console.error('fetchPrices error', err);
+      } finally{
+        updateTrackedCount();
+      }
+    }
+
+    // ======== Auto-refresh logic ========
+    function setupAuto(){
+      clearInterval(state.timer);
+      if (state.auto){
+        state.timer = setInterval(fetchPrices, Math.max(5, state.intervalSec) * 1000);
+        autoStatusEl.textContent = 'On';
+        toggleAutoBtn.textContent = 'Auto: On';
+      } else {
+        autoStatusEl.textContent = 'Off';
+        toggleAutoBtn.textContent = 'Auto: Off';
+      }
+    }
+
+    // ======== UI Events ========
+    vsCurrencyEl.addEventListener('change', (e)=>{
+      state.vsCurrency = e.target.value;
+      fetchPrices();
+    });
+
+    intervalInputEl.addEventListener('change', (e)=>{
+      const v = parseInt(e.target.value,10);
+      if (!Number.isFinite(v) || v < 5) {
+        e.target.value = state.intervalSec;
+        return;
+      }
+      state.intervalSec = v;
+      setupAuto();
+    });
+
+    refreshBtn.addEventListener('click', ()=> fetchPrices() );
+    toggleAutoBtn.addEventListener('click', ()=>{
+      state.auto = !state.auto;
+      setupAuto();
+    });
+
+    addCoinBtn.addEventListener('click', ()=>{
+      const id = coinIdSafe(addCoinInput.value);
+      if (!id) return;
+      state.coins.add(id);
+      addCoinInput.value = '';
+      fetchPrices();
+      updateTrackedCount();
+    });
+
+    addCoinInput.addEventListener('keydown', (e)=>{
+      if (e.key === 'Enter') addCoinBtn.click();
+    });
+
+    quickBtns.forEach(b=>{
+      b.addEventListener('click', ()=>{
+        const id = b.dataset.coin;
+        state.coins.add(id);
+        fetchPrices();
+      });
+    });
+
+    // Delegate remove buttons
+    listEl.addEventListener('click', (e)=>{
+      const removeId = e.target.getAttribute('data-remove');
+      if (!removeId) return;
+      state.coins.delete(removeId);
+      fetchPrices();
+    });
+
+    // ======== Init ========
+    function init(){
+      // render placeholders
+      renderCoinsPlaceholders();
+      updateTrackedCount();
+
+      // apply UI values
+      vsCurrencyEl.value = state.vsCurrency;
+      intervalInputEl.value = state.intervalSec;
+
+      // first fetch
+      fetchPrices();
+
+      // start auto
+      setupAuto();
+    }
+
+    // Start
+    init();
+
+    // Expose for debugging (optional)
+    window.__cryptoTracker = { state, fetchPrices };
+  </script>
+</body>
+</html>
